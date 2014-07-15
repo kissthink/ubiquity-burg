@@ -328,7 +328,7 @@ def cdrom_mount_info():
 def grub_device_map():
     """Return the contents of the default GRUB device map."""
     # edit by kobe
-    subp = subprocess.Popen(['burg-mkdevicemap', '--no-floppy', '-m', '-'],
+    subp = subprocess.Popen(['grub-mkdevicemap', '--no-floppy', '-m', '-'],
                             stdout=subprocess.PIPE, universal_newlines=True)
     return subp.communicate()[0].splitlines()
 
