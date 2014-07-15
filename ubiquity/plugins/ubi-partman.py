@@ -161,8 +161,7 @@ class PageGtk(PageBase):
         self.resize_path = ''
         self.auto_colors = ['3465a4', '73d216', 'f57900']
         self.extra_options = {}
-
-	# edit by kobe: add flags to judge it's creating or editing partiton
+        # edit by kobe: add flags to judge it's creating or editing partiton
         self.create_flag = False
         self.edit_flag = False
 
@@ -271,7 +270,7 @@ class PageGtk(PageBase):
             widget.show()
 
     def plugin_on_next_clicked(self):
-	# ----------------edit by kobe---------------
+        # ----------------edit by kobe---------------
         # 删除ubuntu重新安装
         replace = self.replace_partition.get_active()
         # 用户点击“安装 Ubuntu，与其他系统共存”来安装，则该值为真
@@ -533,8 +532,7 @@ class PageGtk(PageBase):
                     '/usr/share/ubiquity')
                 icon.logo.set_from_file(os.path.join(
                     PATH, 'pixmaps', 'windows_square.png'))
-	    #elif 'buntu' in title.lower():
-	    # -------edit by kobe--------
+            # -------edit by kobe--------
             elif 'ukylin' in title.lower() or 'neokylin' in title.lower():
                 icon.set_property('icon-name', 'distributor-logo')
             else:
@@ -655,7 +653,7 @@ class PageGtk(PageBase):
 
     def set_autopartition_options(self, options, extra_options):
         # TODO Need to select a radio button when resize isn't around.
-	self.extra_options = extra_options
+        self.extra_options = extra_options
         # ----------edit by kobe-------------
         fmt = '<span size="small">%s</span>'
         f = '<span foreground=\"#ADADAD\"><span size="small">%s</span></span>'
@@ -729,8 +727,7 @@ class PageGtk(PageBase):
             opt_desc.hide()
         self.part_ask_option_changed(None)
         self.current_page = self.page_ask
-        
-	#self.extra_options = extra_options
+        #self.extra_options = extra_options
         #fmt = '<span size="small">%s</span>'
         #option_to_widget = (
         #    ("resize", "resize_use_free"),
@@ -1222,8 +1219,7 @@ class PageGtk(PageBase):
         self.partition_dialog.show()
         response = self.partition_dialog.run()
         self.partition_dialog.hide()
-
-	# ----------edit by kobe-----------
+        # ----------edit by kobe-----------
         if create and (response == Gtk.ResponseType.NO):
             self.create_flag = False
         if not create and (response == Gtk.ResponseType.NO):
@@ -2030,7 +2026,9 @@ class Page(plugin.Plugin):
         for i in range(len(choices_c)):
             # ------edit by kobe--------
             # if choices_c[i].startswith('/'):
-            if choices_c[i].startswith('/ - ') or choices_c[i].startswith('/swap - '):
+            if choices_c[i].startswith('/ - '):
+                yield (choices_c[i].split(' ')[0], choices_c[i], choices[i])
+            elif choices_c[i].startswith('/swap - '):
                 yield (choices_c[i].split(' ')[0], choices_c[i], choices[i])
 
     def get_current_method(self, partition):
@@ -2337,8 +2335,7 @@ class Page(plugin.Plugin):
         # quit here for now
         if 'use_device' not in self.extra_options:
             return options
-
-	# ---------edit by kobe----------
+        # ---------edit by kobe----------
         if os_count == 0:
             if resize_option:
                 # 利用空闲分区安装 ${DISTRO} ${VER}"
@@ -2426,8 +2423,8 @@ class Page(plugin.Plugin):
         #        options['use_device'] = opt
 
         #        if wubi_option:
-        #            # We don't have a Wubi-like solution for Ubuntu yet (though
-        #            # wubi_option is also a check for ntfs).
+        #            # We don't have a Wubi-like solution for Ubuntu yet (
+        #            # though wubi_option is also a check for ntfs).
         #            pass
         #        elif resize_option:
         #            q = 'ubiquity/partitioner/ubuntu_resize'

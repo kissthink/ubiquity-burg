@@ -1444,7 +1444,7 @@ class Install(install_misc.InstallBase):
         keep = install_misc.query_recorded_installed()
 
         arch, subarch = install_misc.archdetect()
-	# edit by kobe
+        # edit by kobe.
         if arch in ('amd64', 'i386'):
             for pkg in ('burg', 'burg-pc', 'grub-efi', 'grub-efi-amd64',
                         'grub-efi-amd64-signed', 'shim-signed',

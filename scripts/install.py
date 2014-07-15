@@ -279,7 +279,7 @@ class Install(install_misc.InstallBase):
                     altmeta = ''
                 keep.add('linux-signed-generic%s' % altmeta)
             else:
-		# edit by kobe
+                # edit by kobe.
                 keep.add('burg')
                 keep.add('burg-pc')
         elif (arch in ('armel', 'armhf') and
