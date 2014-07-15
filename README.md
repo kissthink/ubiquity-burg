@@ -1,5 +1,8 @@
 ubiquity-burg
 =============
+
+ubiquity-2.18.8 for ubuntukylin 1404(trusty)
+
 (1)用burg替换部分相关打grub关键字：
 ./d-i/source/grub-installer/grub-installer
 	:1,$s/grub-pc/burg-pc/g
@@ -24,10 +27,10 @@ ubiquity-burg
 (11)安装类型选择界面中文化文字修改：
 vim ./debian/real-po/zh_CN.po 
 (高级安装；
-"<span foreground=\"darkred\">注意：</span>这会删除原有**系统的所有文件，可能会用完硬盘的所有剩余空间。"； 
-利用空闲分区安装**正式版2.0；
-利用硬盘上现有的空闲分区安装**系统，不会影响硬盘上已经安装的其他操作系统；
-覆盖原有**系统)
+注意：这会删除原有系统的所有文件，可能会用完硬盘的所有剩余空间。； 
+利用空闲分区安装正式版2.0；
+利用硬盘上现有的空闲分区安装系统，不会影响硬盘上已经安装的其他操作系统；
+覆盖原有系统)
 
 
 vim快捷键：
