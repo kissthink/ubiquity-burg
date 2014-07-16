@@ -24,7 +24,9 @@ from ubiquity import plugin
 
 NAME = 'wireless'
 #after prepare for default install, but language for oem install
-AFTER = 'language'
+#AFTER = 'language'
+AFTER = None
+HIDDEN = 'wireless'
 WEIGHT = 12
 
 

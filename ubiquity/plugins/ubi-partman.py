@@ -25,12 +25,15 @@ import signal
 
 import debconf
 
+# edit by kobe, i18n
 from ubiquity import misc, osextras, parted_server, plugin, validation
 from ubiquity.install_misc import archdetect
 
 
 NAME = 'partman'
-AFTER = 'prepare'
+#AFTER = 'prepare'
+AFTER = 'language'
+#AFTER = None
 WEIGHT = 11
 # Not useful in oem-config.
 OEM = False
@@ -1747,6 +1750,18 @@ class PartmanOptionError(LookupError):
 
 class Page(plugin.Plugin):
     def prepare(self):
+        # edit by kobe
+        #self.language_question = 'localechooser/languagelist'
+        #self.new_language = 'zh_CN'
+        #self.preseed(self.language_question, self.new_language)
+        #self.db.set('debian-installer/locale', 'zh_CN')
+        #self.db.reset('debian-installer/country')
+        #plugin.Plugin.ok_handler(self)
+        #plugin.Plugin.cleanup(self)
+        #i18n.reset_locale(self.frontend)
+        #self.frontend.stop_debconf()
+        #self.ui.controller.translate(just_me=False, not_me=True, reget=True)
+
         self.some_device_desc = ''
         self.resize_desc = ''
         self.manual_desc = ''

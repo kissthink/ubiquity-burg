@@ -163,6 +163,9 @@ class BaseFrontend:
             pass
 
         # Load plugins
+        # edit by kobe
+        # plugins is all page plugin
+        # modules is the valid page plugin which will display
         plugins = plugin_manager.load_plugins()
         modules = plugin_manager.order_plugins(plugins)
         self.modules = []

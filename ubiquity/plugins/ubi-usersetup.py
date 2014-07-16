@@ -35,7 +35,8 @@ from ubiquity import misc, plugin, validation
 
 
 NAME = 'usersetup'
-AFTER = 'console_setup'
+#AFTER = 'console_setup'
+AFTER = 'partman'
 WEIGHT = 10
 
 

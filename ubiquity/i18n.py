@@ -30,6 +30,7 @@ import sys
 from ubiquity import im_switch, misc
 
 
+# edit by kobe:en_US.UTF-8
 def reset_locale(frontend):
     frontend.start_debconf()
     di_locale = frontend.db.get('debian-installer/locale')
@@ -37,7 +38,7 @@ def reset_locale(frontend):
         # TODO cjwatson 2006-07-17: maybe fetch
         # languagechooser/language-name and set a language based on
         # that?
-        di_locale = 'en_US.UTF-8'
+        di_locale = 'zh_CN.UTF-8'
     if 'LANG' not in os.environ or di_locale != os.environ['LANG']:
         os.environ['LANG'] = di_locale
         os.environ['LANGUAGE'] = di_locale

@@ -27,7 +27,9 @@ from ubiquity import keyboard_names, misc, osextras, plugin
 
 
 NAME = 'console_setup'
-AFTER = 'timezone'
+#AFTER = 'timezone'
+AFTER = None
+HIDDEN = 'console_setup'
 WEIGHT = 10
 
 

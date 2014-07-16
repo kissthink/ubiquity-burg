@@ -26,10 +26,13 @@ import re
 import debconf
 
 from ubiquity import auto_update, i18n, misc, osextras, plugin
+# edit by kobe
+import ubiquity.tz
 
 
 NAME = 'language'
 AFTER = None
+#HIDDEN = 'language'
 WEIGHT = 10
 
 try:
@@ -648,6 +651,11 @@ class Page(plugin.Plugin):
     def prepare(self, unfiltered=False):
         self.language_question = None
         self.initial_language = None
+        # edit by kobe
+#        self.language_question = 'localechooser/languagelist'
+#        self.initial_language = 'zh_CN'
+        self.tzdb = ubiquity.tz.Database()
+
         self.db.fset('localechooser/languagelist', 'seen', 'false')
         with misc.raised_privileges():
             osextras.unlink_force('/var/lib/localechooser/preseeded')
@@ -679,7 +687,9 @@ class Page(plugin.Plugin):
             self.language_question = question
             if self.initial_language is None:
                 self.initial_language = self.db.get(question)
-            current_language_index = self.value_index(question)
+            #current_language_index = self.value_index(question)
+            # edit by kobe
+            current_language_index = 1
             only_installable = misc.create_bool(
                 self.db.get('ubiquity/only-show-installable-languages'))
 
@@ -699,6 +709,115 @@ class Page(plugin.Plugin):
         self.ui.controller.translate(just_me=False, not_me=True)
         plugin.Plugin.cancel_handler(self)
 
+    # edit by kobe
+    def set_di_country(self, zone):
+        location = self.tzdb.get_loc(zone)
+        if location:
+            self.preseed('debian-installer/country', location.country)
+
+    # edit by kobe
+    def apply_real_keyboard(self, model, layout, variant, options):
+        args = []
+        if model is not None and model != '':
+            args.extend(("-model", model))
+        args.extend(("-layout", layout))
+        if variant != '':
+            args.extend(("-variant", variant))
+        args.extend(("-option", ""))
+        for option in options:
+            args.extend(("-option", option))
+        misc.execute("setxkbmap", *args)
+
+    # edit by kobe
+    @misc.raise_privileges
+    def rewrite_xorg_conf(self, model, layout, variant, options):
+        oldconfigfile = '/etc/X11/xorg.conf'
+        newconfigfile = '/etc/X11/xorg.conf.new'
+        try:
+            oldconfig = open(oldconfigfile)
+        except IOError:
+            # Did they remove /etc/X11/xorg.conf or something? Oh well,
+            # better to carry on than to crash.
+            return
+        newconfig = open(newconfigfile, 'w')
+
+        re_section_inputdevice = re.compile(r'\s*Section\s+"InputDevice"\s*$')
+        re_driver_kbd = re.compile(r'\s*Driver\s+"kbd"\s*$')
+        re_endsection = re.compile(r'\s*EndSection\s*$')
+        re_option_xkbmodel = re.compile(r'(\s*Option\s*"XkbModel"\s*).*')
+        re_option_xkblayout = re.compile(r'(\s*Option\s*"XkbLayout"\s*).*')
+        re_option_xkbvariant = re.compile(r'(\s*Option\s*"XkbVariant"\s*).*')
+        re_option_xkboptions = re.compile(r'(\s*Option\s*"XkbOptions"\s*).*')
+        in_inputdevice = False
+        in_inputdevice_kbd = False
+        done = {'model': model == '', 'layout': False,
+                'variant': variant == '', 'options': options == ''}
+
+        for line in oldconfig:
+            line = line.rstrip('\n')
+            if re_section_inputdevice.match(line) is not None:
+                in_inputdevice = True
+            elif in_inputdevice and re_driver_kbd.match(line) is not None:
+                in_inputdevice_kbd = True
+            elif re_endsection.match(line) is not None:
+                if in_inputdevice_kbd:
+                    if not done['model']:
+                        print('\tOption\t\t"XkbModel"\t"%s"' % model,
+                              file=newconfig)
+                    if not done['layout']:
+                        print('\tOption\t\t"XkbLayout"\t"%s"' % layout,
+                              file=newconfig)
+                    if not done['variant']:
+                        print('\tOption\t\t"XkbVariant"\t"%s"' % variant,
+                              file=newconfig)
+                    if not done['options']:
+                        print('\tOption\t\t"XkbOptions"\t"%s"' % options,
+                              file=newconfig)
+                in_inputdevice = False
+                in_inputdevice_kbd = False
+                done = {'model': model == '', 'layout': False,
+                        'variant': variant == '', 'options': options == ''}
+            elif in_inputdevice_kbd:
+                match = re_option_xkbmodel.match(line)
+                if match is not None:
+                    if model == '':
+                        # hmm, not quite sure what to do here; guessing that
+                        # forcing to pc105 will be reasonable
+                        line = match.group(1) + '"pc105"'
+                    else:
+                        line = match.group(1) + '"%s"' % model
+                    done['model'] = True
+                else:
+                    match = re_option_xkblayout.match(line)
+                    if match is not None:
+                        line = match.group(1) + '"%s"' % layout
+                        done['layout'] = True
+                    else:
+                        match = re_option_xkbvariant.match(line)
+                        if match is not None:
+                            if variant == '':
+                                continue  # delete this line
+                            else:
+                                line = match.group(1) + '"%s"' % variant
+                            done['variant'] = True
+                        else:
+                            match = re_option_xkboptions.match(line)
+                            if match is not None:
+                                if options == '':
+                                    continue  # delete this line
+                                else:
+                                    line = match.group(1) + '"%s"' % options
+                                done['options'] = True
+            print(line, file=newconfig)
+
+        newconfig.close()
+        oldconfig.close()
+        os.rename(newconfigfile, oldconfigfile)
+
+    # edit by kobe
+    # it will work when clicked the 'continue' button
+    # eg:new_language = 'zh_CN'
+    # self.language_question = 'localechooser/languagelist'
     def ok_handler(self):
         if self.language_question is not None:
             new_language = self.ui.get_language()
@@ -708,13 +827,45 @@ class Page(plugin.Plugin):
                 self.db.reset('debian-installer/country')
         if self.ui.controller.oem_config:
             self.preseed('oem-config/id', self.ui.get_oem_id())
+
+        zone = 'Asia/Chongqing'
+        if zone is None:
+            zone = self.db.get('time/zone')
+        else:
+            self.preseed('time/zone', zone)
+        self.set_di_country(zone)
+
+        variant = '汉语'
+        if variant is not None:
+            self.preseed('keyboard-configuration/variant', variant)
+
         plugin.Plugin.ok_handler(self)
 
     def cleanup(self):
+        # edit by kobe
+        # model = 'pc105'
+        # layout = 'cn'
+        # variant = ''
+        # options = ''
+        model = self.db.get('keyboard-configuration/modelcode')
+        layout = self.db.get('keyboard-configuration/layoutcode')
+        variant = self.db.get('keyboard-configuration/variantcode')
+        options = self.db.get('keyboard-configuration/optionscode')
+        if options:
+            options_list = options.split(',')
+        else:
+            options_list = []
+        self.apply_real_keyboard(model, layout, variant, options_list)
+
         plugin.Plugin.cleanup(self)
         i18n.reset_locale(self.frontend)
         self.frontend.stop_debconf()
         self.ui.controller.translate(just_me=False, not_me=True, reget=True)
+
+        # edit by kobe
+        if layout == '':
+            return
+        self.rewrite_xorg_conf(model, layout, variant, options)
 
 
 class Install(plugin.InstallPlugin):

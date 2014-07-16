@@ -24,7 +24,8 @@ from ubiquity import plugin
 
 
 NAME = 'tasks'
-AFTER = 'network'
+#AFTER = 'network'
+AFTER = 'usersetup'
 WEIGHT = 12
 
 

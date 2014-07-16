@@ -27,7 +27,9 @@ from ubiquity import i18n, misc, osextras, plugin, upower
 
 
 NAME = 'prepare'
-AFTER = 'wireless'
+#AFTER = 'wireless'
+AFTER = None
+HIDDEN = 'prepare'
 WEIGHT = 11
 OEM = False
 
