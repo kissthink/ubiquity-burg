@@ -3,7 +3,7 @@ ubiquity (3.0.0) trusty-proposed; urgency=medium
   * Burg for JXW 3.0.
   * Skip some steps.
 
- -- Kobe Lee (kylinkobe) <xiangli@ubuntukylin.com>  Wed, 16 Jul 2014 12:50:46 +0800
+ -- Kobe Lee (kylinkobe) <xiangli@ubuntukylin.com>  Mon, 21 Jul 2014 10:27:26 +0800
 
 ubiquity (2.18.8) trusty-proposed; urgency=medium
 
