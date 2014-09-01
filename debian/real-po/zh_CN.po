@@ -1675,7 +1675,7 @@ msgstr "保留文档、音乐和其他个人文件，尽量保留已安装的软
 #. CURDISTRO is a variable substituted into this string, and may be 'Ubuntu 10.10'
 #: ../ubiquity.templates:249001
 msgid "Install ${DISTRO} ${VER} alongside ${CURDISTRO}"
-msgstr "利用空闲分区安装UKylin教学网正式版3.0"
+msgstr "利用空闲分区安装优麒麟操作系统教学网定制版 v3.0"
 
 #. Type: text
 #. Description

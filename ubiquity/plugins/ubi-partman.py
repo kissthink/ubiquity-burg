@@ -710,7 +710,7 @@ class PageGtk(PageBase):
             if FREE_HAVE is False:
                 opt_widget_rs.set_sensitive(False)
         else:
-            title = '利用空闲分区安装UKylin教学网正式版3.0'
+            title = '利用空闲分区安装优麒麟操作系统教学网定制版 v3.0'
             desc1 = '利用硬盘上现有的空闲分区安装教学网系统，'
             desc2 = '不会影响硬盘上已经安装的其他操作系统。'
             desc = desc1 + desc2
@@ -1164,7 +1164,10 @@ class PageGtk(PageBase):
             list_store = Gtk.ListStore(GObject.TYPE_STRING,
                                        GObject.TYPE_STRING)
             for script, arg, option in partition['method_choices']:
-                list_store.append([arg, option])
+                # ------------edit by kobe (edit parted)-----------
+                if arg in ('ext4', 'swap'):
+                    list_store.append([arg, option])
+                #list_store.append([arg, option])
         self.partition_use_combo.set_model(list_store)
         if create:
             if list_store.get_iter_first():

@@ -474,7 +474,8 @@ ReleaseInfo = namedtuple('ReleaseInfo', 'name, version')
 def get_release():
     if get_release.release_info is None:
         try:
-            with open('/cdrom/.disk/info') as fp:
+            # edit by kobe
+            with open('/cdrom/.disk/ukylin') as fp:
                 line = fp.readline()
                 if line:
                     line = line.split()

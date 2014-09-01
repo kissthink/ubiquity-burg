@@ -64,7 +64,7 @@ for dev in $DEVICES/*; do
 			# -----------------edit by kobe---------------------
                         release=""
                         release_num=""
-                        if [ -e $mountpoint/etc/ukylin-release ]; then
+                        if [ -e "$mountpoint/etc/ukylin-release" ]; then
                             release="$(grep -s DISTRIB_ID $mountpoint/etc/ukylin-release)" || true
                         else
 			    release="$(grep -s DISTRIB_ID $mountpoint/etc/lsb-release)" || true
@@ -73,25 +73,25 @@ for dev in $DEVICES/*; do
                         # 把NeoKylin 3.2.1 V1.2.2从最后一个.开始截取,留下NeoKylin 3.2.1 V1.2
                         kylin=""
                         release_kylin=""
-                        if [ -e $mountpoint/etc/kylin-release ]; then
+                        if [ -e "$mountpoint/etc/kylin-release" ]; then
                             kylin=`cat $mountpoint/etc/kylin-release`
                             release_kylin=${kylin%.*}
                         fi
 			umount -l "$mountpoint" || true
 			if [ "${release##DISTRIB_ID=}" = "UKylin" ]; then
-				db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
-				db_metaget partman-auto/text/replace description
-				replace="$replace$NL$part$TAB$RET"
+                            db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
+                            db_metaget partman-auto/text/replace description
+                            replace="$replace$NL$part$TAB$RET"
 			elif [ "${release##DISTRIB_ID=}" = "UbuntuKylin" ]; then
-				if [ "${release_num##DISTRIB_RELEASE=}" = "2.0" ]; then
-					db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
-					db_metaget partman-auto/text/replace description
-					replace="$replace$NL$part$TAB$RET"
-				fi
+                            if [ "${release_num##DISTRIB_RELEASE=}" = "2.0" ]; then
+                                db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
+                                db_metaget partman-auto/text/replace description
+                                replace="$replace$NL$part$TAB$RET"
+                            fi
 			elif [ "${release##DISTRIB_ID=}" = "NeoKylin 3.2.1 V1.2" ]; then
-				db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
-				db_metaget partman-auto/text/replace description
-				replace="$replace$NL$part$TAB$RET"
+                            db_subst partman-auto/text/replace PARTITION "$(humandev "$path")"
+                            db_metaget partman-auto/text/replace description
+                            replace="$replace$NL$part$TAB$RET"
 			fi
 			# -------------------end---------------------
 		    fi
